@@ -1,0 +1,54 @@
+* {
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  font-family: "Inter", sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-feature-settings: "kern" 1, "liga" 1;
+  font-feature-settings: "kern" 1, "liga" 1;
+  scroll-behavior: smooth;
+}
+.top-announcement {
+  background-color: #59ca00;
+  padding: 15px;
+  font-size: 18px;
+  color: white;
+}
+.logo-text {
+  color: #59ca00 !important;
+  font-weight: 600;
+}
+.minegeek-navbar {
+  background-color: #393939;
+}
+.sunray {
+  background-image: url("sunray.jpeg");
+  background-size: cover;
+}
+.text-white {
+  color: white;
+}
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.minegear-btn {
+  background-color: #59ca00;
+  border: 0px;
+  border-radius: 0px;
+}
+.dramaticPerson {
+  opacity: 0;
+  position: fixed;
+  right: -500px;
+  bottom: 0px;
+  height: 590px;
+  width: 490px;
+  z-index: 1041;
+  background-size: cover;
+}

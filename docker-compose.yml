@@ -1,0 +1,54 @@
+version: "3.8"
+services:
+  anythink-backend:
+    build: ./backend
+    container_name: anythink-backend
+    command: >
+      sh -c "cd backend &&
+            poetry install &&
+            poetry export -f "requirements.txt" --without-hashes --with-credentials > "requirements.txt"
+            /wait-for-it.sh postgres:5432 -q -t 60 && 
+            poetry run alembic upgrade head &&
+            poetry run uvicorn --host=0.0.0.0 --port=3000 --reload app.main:app"
+
+    working_dir: /usr/src
+    volumes:
+      - ./:/usr/src
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_ENV=dev
+      - SECRET_KEY=secret
+      - DEBUG=True
+      - DATABASE_URL=postgresql://postgres:@postgres:5432/anythink-market
+    depends_on:
+      - "postgres"
+
+  anythink-frontend:
+    build: ./frontend
+    container_name: anythink-frontend
+    command: sh -c "cd frontend && yarn install && yarn start"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+    working_dir: /usr/src
+    volumes:
+      - ./:/usr/src/
+      - /usr/src/frontend/node_modules
+    ports:
+      - "3001:3001"
+
+  postgres:
+    container_name: postgres
+    restart: on-failure
+    image: postgres
+    logging:
+      driver: none
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: anythink-market
+    volumes:
+      - ~/postgres/data:/data/db
+    ports:
+      - '5433:5432'
