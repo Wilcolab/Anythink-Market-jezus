@@ -10,4 +10,32 @@ When implementing a new feature or fixing a bug, please create a new pull reques
 
 ## First setup
 
-**[TODO 05/01/2018 @vanessa-cooper]:** _It's been a while since anyone ran a fresh copy of this repo. I think it's worth documenting the steps needed to install and run the repo on a new machine?_
+Follow below steps to install and run the repo on a new machine
+
+**Pre-requisites**
+
+install docker & docker-compose.
+
+You can verify docker is ready by running the following commands in your terminal
+```
+ docker -v
+ docker-compose -v
+```
+
+**Step 1 :** Clone this repo
+
+```
+git clone https://github.com/ObelusFamily/Anythink-Market-jezus.git
+```
+
+**Step 2 :** cd to project root directory
+
+```
+cd Anythink-Market-jezus/
+```
+
+**Step 3 :** Run docker compose
+
+```
+docker-compose up
+```
