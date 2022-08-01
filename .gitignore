@@ -29,3 +29,7 @@ yarn-error.log*
 
 #IDEs
 /.idea/
+
+#Dataseed logs
+backend/seed.out
+backend/seed.response
