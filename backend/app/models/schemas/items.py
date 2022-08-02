@@ -38,6 +38,7 @@ class ListOfItemsInResponse(RWSchema):
 
 class ItemsFilters(BaseModel):
     tag: Optional[str] = None
+    title: Optional[str] = None
     seller: Optional[str] = None
     favorited: Optional[str] = None
     limit: int = Field(DEFAULT_ITEMS_LIMIT, ge=1)
