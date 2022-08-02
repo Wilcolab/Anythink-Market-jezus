@@ -18,7 +18,7 @@ async def add_x(x):
     for i in range(x):
         user = await usersRepository.create_user(username=f"user{i}", password="test", email=f"user{i}@test{i}.com")
         item = await itemsRepository.create_item(slug=f"item{i}", seller=user, title=f"title{i}", description=f"description{i}", image="https://picsum.photos/200")
-        comment = await commentsRepository.create_comment_for_item(body="test comment for "+item , item=item, user=user)
+        comment = await commentsRepository.create_comment_for_item(body="test comment for "+str(item) , item=item, user=user)
     
     await conn.close()
 
