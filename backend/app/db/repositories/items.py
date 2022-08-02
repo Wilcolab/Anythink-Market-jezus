@@ -104,6 +104,7 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
         self,
         *,
         tag: Optional[str] = None,
+        title: Optional[str] = None,
         seller: Optional[str] = None,
         favorited: Optional[str] = None,
         limit: int = 20,
@@ -114,27 +115,50 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
         query_params_count = 0
 
         # fmt: off
-        query = Query.from_(
-            items,
-        ).select(
-            items.id,
-            items.slug,
-            items.title,
-            items.description,
-            items.body,
-            items.image,
-            items.created_at,
-            items.updated_at,
-            Query.from_(
-                users,
-            ).where(
-                users.id == items.seller_id,
+        if title:
+            query = Query.from_(
+                items,
             ).select(
-                users.username,
-            ).as_(
-                SELLER_USERNAME_ALIAS,
-            ),
-        )
+                items.id,
+                items.slug,
+                items.title,
+                items.description,
+                items.body,
+                items.image,
+                items.created_at,
+                items.updated_at,
+                Query.from_(
+                    users,
+                ).where(
+                    users.id == items.seller_id,
+                ).select(
+                    users.username,
+                ).as_(
+                    SELLER_USERNAME_ALIAS,
+                ),
+            ).where(items.title == title)
+        else:
+            query = Query.from_(
+                items,
+            ).select(
+                items.id,
+                items.slug,
+                items.title,
+                items.description,
+                items.body,
+                items.image,
+                items.created_at,
+                items.updated_at,
+                Query.from_(
+                    users,
+                ).where(
+                    users.id == items.seller_id,
+                ).select(
+                    users.username,
+                ).as_(
+                    SELLER_USERNAME_ALIAS,
+                ),
+            )   
         # fmt: on
 
         if tag:
