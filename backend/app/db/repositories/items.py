@@ -20,6 +20,7 @@ from app.models.domain.items import Item
 from app.models.domain.users import User
 
 SELLER_USERNAME_ALIAS = "seller_username"
+TITLE_ALIAS = "title"
 SLUG_ALIAS = "slug"
 
 CAMEL_OR_SNAKE_CASE_TO_WORDS = r"^[a-z\d_\-]+|[A-Z\d_\-][^A-Z\d_\-]*"
@@ -249,6 +250,23 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
 
         raise EntityDoesNotExist("item with slug {0} does not exist".format(slug))
 
+    async def get_item_by_title(
+        self,
+        *,
+        title: str,
+        requested_user: Optional[User] = None,
+    ) -> Item:
+        item_row = await queries.get_item_by_title(self.connection, title=title)
+        if item_row:
+            return await self._get_title_from_db_record(
+                item_row=item_row,
+                title=item_row[TITLE_ALIAS],
+                seller_username=item_row[SELLER_USERNAME_ALIAS],
+                requested_user=requested_user,
+            )
+
+        raise EntityDoesNotExist("item with title {0} does not exist".format(title))
+
     async def get_tags_for_item_by_slug(self, *, slug: str) -> List[str]:
         tag_rows = await queries.get_tags_for_item_by_slug(
             self.connection,
@@ -302,6 +320,47 @@ class ItemsRepository(BaseRepository):  # noqa: WPS214
         if not len(result_rows):
             raise Exception(f'No item with slug {slug}')
         title = result_rows[0]['title']
+
+        return Item(
+            id_=item_row["id"],
+            slug=slug,
+            title=title,
+            description=item_row["description"],
+            body=item_row["body"],
+            image=item_row["image"],
+            seller=await self._profiles_repo.get_profile_by_username(
+                username=seller_username,
+                requested_user=requested_user,
+            ),
+            tags=await self.get_tags_for_item_by_slug(slug=slug),
+            favorites_count=await self.get_favorites_count_for_item_by_slug(
+                slug=slug,
+            ),
+            favorited=await self.is_item_favorited_by_user(
+                slug=slug,
+                user=requested_user,
+            )
+            if requested_user
+            else False,
+            created_at=item_row["created_at"],
+            updated_at=item_row["updated_at"],
+        )
+
+    async def _get_title_from_db_record(
+        self,
+        *,
+        item_row: Record,
+        title: str,
+        seller_username: str,
+        requested_user: Optional[User],
+    ) -> Item:
+        title_query = Query.from_(items).select(items.title).where(items.title == title)
+        result_rows = await self.connection.fetch(title_query.get_sql())
+        if not len(result_rows):
+            raise Exception(f'No item with title {title}')
+        title = result_rows[0]['title']
+
+        slug = item_row['slug']
 
         return Item(
             id_=item_row["id"],

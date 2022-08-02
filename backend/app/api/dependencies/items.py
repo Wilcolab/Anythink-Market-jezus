@@ -48,6 +48,20 @@ async def get_item_by_slug_from_path(
         )
 
 
+async def get_item_by_title_from_path(
+    title: str = Path(..., min_length=1),
+    user: Optional[User] = Depends(get_current_user_authorizer(required=False)),
+    items_repo: ItemsRepository = Depends(get_repository(ItemsRepository)),
+) -> Item:
+    try:
+        return await items_repo.get_item_by_title(title=title, requested_user=user)
+    except EntityDoesNotExist:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=strings.ITEM_DOES_NOT_EXIST_ERROR,
+        )
+
+
 def check_item_modification_permissions(
     current_item: Item = Depends(get_item_by_slug_from_path),
     user: User = Depends(get_current_user_authorizer()),

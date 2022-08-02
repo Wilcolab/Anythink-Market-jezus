@@ -49,6 +49,21 @@ WHERE slug = :slug
 LIMIT 1;
 
 
+-- name: get-item-by-title^
+SELECT id,
+       slug,
+       title,
+       description,
+       body,
+       image,
+       created_at,
+       updated_at,
+       (SELECT username FROM users WHERE id = seller_id) AS seller_username
+FROM items
+WHERE title = :title
+LIMIT 1;
+
+
 -- name: create-new-item<!
 WITH seller_subquery AS (
     SELECT id, username

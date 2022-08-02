@@ -6,6 +6,7 @@ from starlette import status
 from app.api.dependencies.items import (
     check_item_modification_permissions,
     get_item_by_slug_from_path,
+    get_item_by_title_from_path,
     get_items_filters,
 )
 from app.api.dependencies.authentication import get_current_user_authorizer
@@ -87,6 +88,11 @@ async def retrieve_item_by_slug(
 ) -> ItemInResponse:
     return ItemInResponse(item=ItemForResponse.from_orm(item))
 
+@router.get("/title/{title}", response_model=ItemInResponse, name="items:get-title")
+async def retrieve_item_by_title(
+    item: Item = Depends(get_item_by_title_from_path),
+) -> ItemInResponse:
+    return ItemInResponse(item=ItemForResponse.from_orm(item))
 
 @router.put(
     "/{slug}",
