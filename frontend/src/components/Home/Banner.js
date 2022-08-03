@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../../imgs/logo.png";
+import agent from "../../agent";
 
 const Banner = () => {
   return (
@@ -8,6 +9,15 @@ const Banner = () => {
         <img src={logo} alt="banner" />
         <div>
           <span id="get-part">A place to get</span>
+          <input
+            id="search-box"
+            placeholder="What is it that you truly desire?"
+            onInput={(e) => {
+              const searchValue = e.target.value;
+              if (searchValue.length <= 3) return;
+              agent.Items.byTitle(searchValue);
+            }}
+          ></input>
           <span> the cool stuff.</span>
         </div>
       </div>
