@@ -1,11 +1,14 @@
 import superagentPromise from "superagent-promise";
 import _superagent from "superagent";
 
+process.env.BACKEND_URL = "https://anythink-market-jezus-api.herokuapp.com/api"
+
+const BACKEND_URL = process.env.BACKEND_URL
 const superagent = superagentPromise(_superagent, global.Promise);
 
 const API_ROOT =
   process.env.NODE_ENV !== "production"
-    ? "https://anythink-market-jezus-api.herokuapp.com/api"
+    ? BACKEND_URL
     : "https://api.anythink.market/api";
 
 const encode = encodeURIComponent;
