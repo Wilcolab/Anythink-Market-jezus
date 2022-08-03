@@ -22,9 +22,11 @@ class Banner extends React.Component {
                   {" "}
                   get{" "}
                 </span>
-              <span hidden={this.state.hideSearchField} >
-              <SearchBar />
-              </span>
+                <span
+                  hidden={this.state.hideSearchField}
+                >
+                  <SearchBar />
+                </span>
               <span> the cool stuff.</span>
             </div>
           </div>
