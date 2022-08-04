@@ -28,6 +28,7 @@ services:
     command: sh -c "cd frontend && yarn install && yarn start"
     environment:
       - NODE_ENV=development
+      - REACT_APP_BACKEND_URL=https://api.anythink.market
       - PORT=3001
     working_dir: /usr/src
     volumes:
