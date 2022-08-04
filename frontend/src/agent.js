@@ -6,7 +6,7 @@ const superagent = superagentPromise(_superagent, global.Promise);
 const API_ROOT =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000/api"
-    : "https://api.anythink.market/api";
+    : `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 const encode = encodeURIComponent;
 const responseBody = (res) => res.body;
