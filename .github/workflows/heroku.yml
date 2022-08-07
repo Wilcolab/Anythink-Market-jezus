@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-secret:
+    environment: Production
+    runs-on: ubuntu-latest
+    outputs:
+      heroku-backend: ${{ steps.heroku-backend.outputs.defined }}
+      heroku-frontend: ${{ steps.heroku-frontend.outputs.defined }}
+    steps:
+      - id: heroku-backend
+        if: "${{ env.BACKEND_KEY != '' }}"
+        run: echo "::set-output name=defined::true"
+        env:
+            BACKEND_KEY: ${{ secrets.HEROKU_BACKEND_APP }}
+
+      - id: heroku-frontend
+        if: "${{ env.FRONTEND_KEY != '' }}"
+        run: echo "::set-output name=defined::true"
+        env:
+            FRONTEND_KEY: ${{ secrets.HEROKU_FRONTEND_APP }}
+            
+  build-backend:
+    environment: Production
+    runs-on: ubuntu-latest
+    needs: [check-secret]
+    if: needs.check-secret.outputs.heroku-backend == 'true'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_BACKEND_APP}}
+          heroku_email: "ness@anythink.family"
+          dontautocreate: true
+
+  build-frontend:
+    environment: Production
+    runs-on: ubuntu-latest
+    needs: [check-secret]
+    if: needs.check-secret.outputs.heroku-frontend == 'true'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_FRONTEND_APP}}
+          heroku_email: "ness@anythink.family"
+          dontautocreate: true
