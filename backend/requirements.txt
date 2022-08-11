@@ -41,3 +41,4 @@ unidecode==1.3.2
 urllib3==1.26.9
 uvicorn==0.17.4
 win32-setctime==1.1.0; sys_platform == "win32"
+newrelic==7.16.0
