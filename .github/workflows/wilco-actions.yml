@@ -1,0 +1,43 @@
+on: [pull_request]
+
+jobs:
+  wilco:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    name: Pr checks
+
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16"
+
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.6.0
+        with:
+          mongodb-version: "4.4"
+
+      - name: Wilco checks
+        id: Wilco
+        uses: trywilco/actions@main
+        with:
+          owner: ${{ github.repository_owner }}
+  Lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v2
+      - name: Lint code
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - run: yarn install
+      - run: yarn lint

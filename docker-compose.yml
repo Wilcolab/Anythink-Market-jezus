@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  anythink-backend-node:
+    build: ./backend
+    container_name: anythink-backend-node
+    command: sh -c "cd backend && yarn install && /wait-for-it.sh mongodb-node:27017 -q -t 60 && yarn dev"
+
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb-node:27017/anythink-market
+    working_dir: /usr/src
+    volumes:
+      - ./:/usr/src/
+      - /usr/src/backend/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "mongodb-node"
+
+  anythink-frontend-react:
+    build: ./frontend
+    container_name: anythink-frontend-react
+    command: sh -c "cd frontend && yarn install && yarn start"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+    working_dir: /usr/src
+    volumes:
+      - ./:/usr/src/
+      - /usr/src/frontend/node_modules
+    ports:
+      - "3001:3001"
+
+  mongodb-node:
+    container_name: mongodb-node
+    restart: always
+    image: mongo
+    logging:
+      driver: none
+    volumes:
+      - ~/mongo/data:/data/db
+    ports:
+      - '27017:27017'

@@ -1,0 +1,43 @@
+{
+  "name": "anythink-market-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "engines": {
+    "node": "^16"
+  },
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js",
+    "seeds": "node ./scripts/seeds.js",
+    "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
+    "stop": "lsof -ti :3000 | xargs kill"
+  },
+  "dependencies": {
+    "axios": "^0.25.0",
+    "body-parser": "1.15.0",
+    "cors": "2.7.1",
+    "dotenv": "^8.2.0",
+    "ejs": "2.4.1",
+    "errorhandler": "1.4.3",
+    "express": "4.13.4",
+    "express-async-handler": "^1.2.0",
+    "express-jwt": "3.3.0",
+    "express-session": "1.13.0",
+    "jsonwebtoken": "7.1.9",
+    "method-override": "2.3.5",
+    "methods": "1.1.2",
+    "mongoose": "5.12.5",
+    "mongoose-unique-validator": "3.0.0",
+    "morgan": "1.7.0",
+    "newrelic": "^8.11.1",
+    "passport": "0.3.2",
+    "passport-local": "1.0.0",
+    "request": "2.69.0",
+    "slug": "0.9.1",
+    "underscore": "1.8.3"
+  },
+  "devDependencies": {
+    "newman": "^3.8.2",
+    "nodemon": "^1.11.0"
+  }
+}
