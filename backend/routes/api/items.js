@@ -38,7 +38,7 @@ router.param("comment", function(req, res, next, id) {
 
 router.get("/", auth.optional, function(req, res, next) {
   var query = {};
-  var limit = 100;
+  var limit = 10;
   var offset = 0;
 
   if (typeof req.query.limit !== "undefined") {
@@ -76,6 +76,7 @@ router.get("/", auth.optional, function(req, res, next) {
           .limit(Number(limit))
           .skip(Number(offset))
           .sort({ createdAt: "desc" })
+          .populate("seller")
           .exec(),
         Item.count(query).exec(),
         req.payload ? User.findById(req.payload.id) : null
@@ -86,7 +87,6 @@ router.get("/", auth.optional, function(req, res, next) {
         return res.json({
           items: await Promise.all(
             items.map(async function(item) {
-              item.seller = await User.findById(item.seller);
               return item.toJSONFor(user);
             })
           ),
